@@ -1,20 +1,15 @@
+import type { Category } from "@/types/category";
+
 interface CategoryCardProps {
-  category: {
-    id: number;
-    name: string;
-    image: string;
-    description: string;
-    count?: string;
-    popular: boolean;
-  };
+  category: Category;
   showPopularBadge?: boolean;
   className?: string;
 }
 
-export default function CategoryCard({ 
-  category, 
-  showPopularBadge = true, 
-  className = "" 
+export default function CategoryCard({
+  category,
+  showPopularBadge = true,
+  className = "",
 }: CategoryCardProps) {
   return (
     <div
@@ -44,9 +39,7 @@ export default function CategoryCard({
         <h3 className="text-xl font-semibold text-gray-900 mb-2">
           {category.name}
         </h3>
-        <p className="text-gray-600 text-sm mb-4">
-          {category.description}
-        </p>
+        <p className="text-gray-600 text-sm mb-4">{category.description}</p>
         <button className="w-full bg-orange-500 hover:bg-orange-600 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 flex items-center justify-center">
           Compre agora
           <span className="ml-2">→</span>

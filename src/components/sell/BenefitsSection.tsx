@@ -12,12 +12,7 @@ const colorMap = {
   purple: "bg-purple-100 text-purple-600",
 };
 
-interface Benefit {
-  icon: keyof typeof iconMap;
-  title: string;
-  description: string;
-  color: keyof typeof colorMap;
-}
+import type { Benefit } from "@/types/sell";
 
 interface BenefitsSectionProps {
   benefits: Benefit[];
@@ -34,18 +29,18 @@ export default function BenefitsSection({ benefits }: BenefitsSectionProps) {
           {benefits.map((benefit, index) => {
             const IconComponent = iconMap[benefit.icon];
             const colorClass = colorMap[benefit.color];
-            
+
             return (
               <div key={index} className="text-center">
-                <div className={`w-16 h-16 ${colorClass} rounded-full flex items-center justify-center mx-auto mb-4`}>
+                <div
+                  className={`w-16 h-16 ${colorClass} rounded-full flex items-center justify-center mx-auto mb-4`}
+                >
                   <IconComponent className="w-8 h-8" />
                 </div>
                 <h3 className="text-xl font-semibold text-gray-900 mb-2">
                   {benefit.title}
                 </h3>
-                <p className="text-gray-600">
-                  {benefit.description}
-                </p>
+                <p className="text-gray-600">{benefit.description}</p>
               </div>
             );
           })}

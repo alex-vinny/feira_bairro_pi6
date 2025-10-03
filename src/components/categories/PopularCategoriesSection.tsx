@@ -1,20 +1,15 @@
 import CategoryCard from "./CategoryCard";
 
-interface Category {
-  id: number;
-  name: string;
-  image: string;
-  description: string;
-  count?: string;
-  popular: boolean;
-}
+import type { Category } from "@/types/category";
 
 interface PopularCategoriesSectionProps {
   categories: Category[];
 }
 
-export default function PopularCategoriesSection({ categories }: PopularCategoriesSectionProps) {
-  const popularCategories = categories.filter(cat => cat.popular);
+export default function PopularCategoriesSection({
+  categories,
+}: PopularCategoriesSectionProps) {
+  const popularCategories = categories.filter((cat) => cat.popular);
 
   return (
     <div className="mb-12">

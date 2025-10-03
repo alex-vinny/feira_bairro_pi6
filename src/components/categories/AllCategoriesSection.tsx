@@ -1,19 +1,14 @@
 import CategoryCard from "./CategoryCard";
 
-interface Category {
-  id: number;
-  name: string;
-  image: string;
-  description: string;
-  count?: string;
-  popular: boolean;
-}
+import type { Category } from "@/types/category";
 
 interface AllCategoriesSectionProps {
   categories: Category[];
 }
 
-export default function AllCategoriesSection({ categories }: AllCategoriesSectionProps) {
+export default function AllCategoriesSection({
+  categories,
+}: AllCategoriesSectionProps) {
   return (
     <div>
       <h2 className="text-2xl font-semibold text-gray-900 mb-6">

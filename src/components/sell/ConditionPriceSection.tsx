@@ -1,5 +1,5 @@
 import { Package, DollarSign } from "lucide-react";
-import { Condition } from "@/data/sellData";
+import type { Condition } from "@/types/sell";
 
 interface ConditionPriceSectionProps {
   condition: string;
@@ -18,7 +18,7 @@ export default function ConditionPriceSection({
         <Package className="mr-2 text-blue-600" />
         Estado e Preço
       </h2>
-      
+
       <div className="space-y-6">
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-3">
@@ -26,7 +26,10 @@ export default function ConditionPriceSection({
           </label>
           <div className="space-y-3">
             {conditions.map((cond) => (
-              <label key={cond.value} className="flex items-start space-x-3 cursor-pointer">
+              <label
+                key={cond.value}
+                className="flex items-start space-x-3 cursor-pointer"
+              >
                 <input
                   type="radio"
                   name="condition"
@@ -37,7 +40,9 @@ export default function ConditionPriceSection({
                 />
                 <div>
                   <div className="font-medium text-gray-900">{cond.label}</div>
-                  <div className="text-sm text-gray-600">{cond.description}</div>
+                  <div className="text-sm text-gray-600">
+                    {cond.description}
+                  </div>
                 </div>
               </label>
             ))}
@@ -61,7 +66,7 @@ export default function ConditionPriceSection({
               />
             </div>
           </div>
-          
+
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Aceita Negociação?

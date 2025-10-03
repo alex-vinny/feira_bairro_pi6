@@ -14,12 +14,7 @@ const colorMap = {
   purple: "bg-purple-600",
 };
 
-interface Tip {
-  icon: keyof typeof iconMap;
-  title: string;
-  description: string;
-  color: keyof typeof colorMap;
-}
+import type { Tip } from "@/types/sell";
 
 interface TipsSectionProps {
   tips: Tip[];
@@ -36,20 +31,20 @@ export default function TipsSection({ tips }: TipsSectionProps) {
           {tips.map((tip, index) => {
             const IconComponent = iconMap[tip.icon];
             const colorClass = colorMap[tip.color];
-            
+
             return (
               <div key={index} className="bg-white p-6 rounded-lg shadow-md">
                 <div className="flex items-start space-x-4">
-                  <div className={`w-8 h-8 ${colorClass} rounded-full flex items-center justify-center flex-shrink-0`}>
+                  <div
+                    className={`w-8 h-8 ${colorClass} rounded-full flex items-center justify-center flex-shrink-0`}
+                  >
                     <IconComponent className="w-4 h-4 text-white" />
                   </div>
                   <div>
                     <h3 className="text-lg font-semibold text-gray-900 mb-2">
                       {tip.title}
                     </h3>
-                    <p className="text-gray-600">
-                      {tip.description}
-                    </p>
+                    <p className="text-gray-600">{tip.description}</p>
                   </div>
                 </div>
               </div>
