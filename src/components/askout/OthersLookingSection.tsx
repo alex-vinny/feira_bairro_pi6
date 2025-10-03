@@ -5,16 +5,24 @@ function formatBRL(v: number): string {
   return v.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 }
 
-export default function OthersLookingSection(): ReactElement {
+interface OthersLookingSectionProps {
+  title?: string;
+  subtitle?: string;
+}
+
+export default function OthersLookingSection({
+  title,
+  subtitle,
+}: OthersLookingSectionProps): ReactElement {
   return (
     <section className="py-8">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2 text-center">
-          Confira o que outras pessoas estão procurando!
+          {title ?? "Confira o que outras pessoas estão procurando!"}
         </h2>
         <p className="text-sm text-gray-500 mb-6 text-center">
-          Temos alguns itens na lista abaixo. Publique agora, seus compradores
-          estão prontos!
+          {subtitle ??
+            "Temos alguns itens na lista abaixo. Publique agora, seus compradores estão prontos!"}
         </p>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {recentAsks.map((ask) => (

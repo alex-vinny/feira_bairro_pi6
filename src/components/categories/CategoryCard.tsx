@@ -1,5 +1,6 @@
 import type { Category } from "@/types/category";
 import Image from "next/image";
+import Link from "next/link";
 
 interface CategoryCardProps {
   category: Category;
@@ -43,10 +44,13 @@ export default function CategoryCard({
           {category.name}
         </h3>
         <p className="text-gray-600 text-sm mb-4">{category.description}</p>
-        <button className="mt-auto w-full bg-orange-500 hover:bg-orange-600 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 flex items-center justify-center">
+        <Link
+          href="/product-overview/demo-item"
+          className="mt-auto w-full bg-orange-500 hover:bg-orange-600 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 flex items-center justify-center"
+        >
           Compre agora
           <span className="ml-2">→</span>
-        </button>
+        </Link>
       </div>
     </div>
   );
