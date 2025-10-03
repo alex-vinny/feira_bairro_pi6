@@ -14,11 +14,11 @@ export default function CategoryCard({
 }: CategoryCardProps) {
   return (
     <div
-      className={`bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 ${
+      className={`bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 h-full flex flex-col ${
         category.popular ? "border-2 border-orange-200" : ""
       } ${className}`}
     >
-      <div className="aspect-w-16 aspect-h-10 bg-gray-200 relative">
+      <div className="relative aspect-[16/10] bg-gray-200">
         <Image
           src={category.image}
           alt={category.name}
@@ -38,12 +38,12 @@ export default function CategoryCard({
           </div>
         )}
       </div>
-      <div className="p-6">
+      <div className="p-6 flex flex-col flex-1">
         <h3 className="text-xl font-semibold text-gray-900 mb-2">
           {category.name}
         </h3>
         <p className="text-gray-600 text-sm mb-4">{category.description}</p>
-        <button className="w-full bg-orange-500 hover:bg-orange-600 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 flex items-center justify-center">
+        <button className="mt-auto w-full bg-orange-500 hover:bg-orange-600 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 flex items-center justify-center">
           Compre agora
           <span className="ml-2">→</span>
         </button>

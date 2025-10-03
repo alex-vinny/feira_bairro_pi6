@@ -28,12 +28,6 @@ export default function Header() {
             <Link href="/askout" className="text-gray-700 hover:text-blue-600">
               Perguntar
             </Link>
-            <Link
-              href="/categories"
-              className="text-gray-700 hover:text-blue-600"
-            >
-              Categorias
-            </Link>
             <a href="#" className="text-gray-700 hover:text-blue-600">
               Sobre
             </a>
