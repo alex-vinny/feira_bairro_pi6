@@ -1,4 +1,5 @@
 import type { Category } from "@/types/category";
+import Image from "next/image";
 
 interface CategoryCardProps {
   category: Category;
@@ -18,10 +19,12 @@ export default function CategoryCard({
       } ${className}`}
     >
       <div className="aspect-w-16 aspect-h-10 bg-gray-200 relative">
-        <img
+        <Image
           src={category.image}
           alt={category.name}
-          className="w-full h-48 object-cover"
+          fill
+          className="object-cover"
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 20vw"
         />
         {category.popular && showPopularBadge && (
           <div className="absolute top-2 left-2 bg-orange-500 text-white text-xs px-2 py-1 rounded-full flex items-center">

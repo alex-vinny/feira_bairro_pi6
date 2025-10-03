@@ -6,21 +6,22 @@ import ImageUploadSection from "./ImageUploadSection";
 import ConditionPriceSection from "./ConditionPriceSection";
 import LocationSection from "./LocationSection";
 import { sellCategories, conditions } from "@/data/sellData";
+import type { ConditionValue } from "@/types/sell";
 
 export default function SellForm() {
   const [selectedCategory, setSelectedCategory] = useState("");
-  const [condition, setCondition] = useState("");
+  const [condition, setCondition] = useState<ConditionValue | "">("");
   const [images, setImages] = useState<File[]>([]);
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       const newImages = Array.from(e.target.files);
-      setImages(prev => [...prev, ...newImages].slice(0, 8)); // Max 8 images
+      setImages((prev) => [...prev, ...newImages].slice(0, 8)); // Max 8 images
     }
   };
 
   const removeImage = (index: number) => {
-    setImages(prev => prev.filter((_, i) => i !== index));
+    setImages((prev) => prev.filter((_, i) => i !== index));
   };
 
   const handleSubmit = (e: React.FormEvent) => {

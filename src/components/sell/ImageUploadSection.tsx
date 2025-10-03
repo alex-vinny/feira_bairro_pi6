@@ -1,4 +1,5 @@
 import { Camera, Upload } from "lucide-react";
+import Image from "next/image";
 
 interface ImageUploadSectionProps {
   images: File[];
@@ -17,7 +18,7 @@ export default function ImageUploadSection({
         <Camera className="mr-2 text-blue-600" />
         Fotos do Item
       </h2>
-      
+
       <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
         <Upload className="mx-auto h-12 w-12 text-gray-400 mb-4" />
         <p className="text-lg font-medium text-gray-900 mb-2">
@@ -45,11 +46,14 @@ export default function ImageUploadSection({
       {images.length > 0 && (
         <div className="mt-6 grid grid-cols-2 md:grid-cols-4 gap-4">
           {images.map((image, index) => (
-            <div key={index} className="relative">
-              <img
+            <div key={index} className="relative h-32">
+              <Image
                 src={URL.createObjectURL(image)}
                 alt={`Preview ${index + 1}`}
-                className="w-full h-32 object-cover rounded-lg"
+                fill
+                unoptimized
+                className="object-cover rounded-lg"
+                sizes="(max-width: 768px) 50vw, 25vw"
               />
               <button
                 type="button"

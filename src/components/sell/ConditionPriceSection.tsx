@@ -1,9 +1,9 @@
 import { Package, DollarSign } from "lucide-react";
-import type { Condition } from "@/types/sell";
+import type { Condition, ConditionValue } from "@/types/sell";
 
 interface ConditionPriceSectionProps {
-  condition: string;
-  setCondition: (condition: string) => void;
+  condition: ConditionValue | "";
+  setCondition: (condition: ConditionValue | "") => void;
   conditions: Condition[];
 }
 
@@ -35,7 +35,9 @@ export default function ConditionPriceSection({
                   name="condition"
                   value={cond.value}
                   checked={condition === cond.value}
-                  onChange={(e) => setCondition(e.target.value)}
+                  onChange={(e) =>
+                    setCondition(e.target.value as ConditionValue)
+                  }
                   className="mt-1 text-blue-600 focus:ring-blue-500"
                 />
                 <div>
