@@ -25,6 +25,9 @@ export default function Header() {
             >
               Vender
             </Link>
+            <Link href="/askout" className="text-gray-700 hover:text-blue-600">
+              Perguntar
+            </Link>
             <Link
               href="/categories"
               className="text-gray-700 hover:text-blue-600"
