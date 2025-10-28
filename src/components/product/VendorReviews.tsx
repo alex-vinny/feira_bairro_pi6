@@ -1,11 +1,8 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useEffect, useState } from "react";
 import type { ReactElement } from "react";
-import {
-  vendorReviews as reviews,
-  vendorReviewSummary as summary,
-} from "@/data/vendorReviews";
+import type { Review, VendorReviewSummary } from "@/types/reviews";
 
 function Stars({ count }: { count: number }): ReactElement {
   return (
@@ -29,8 +26,52 @@ function GoogleWord(): ReactElement {
   );
 }
 
-export default function VendorReviews(): ReactElement {
+interface VendorReviewsProps {
+  sellerId?: string;
+}
+
+export default function VendorReviews({ sellerId = 'u-001' }: VendorReviewsProps): ReactElement {
   const scrollerRef = useRef<HTMLDivElement>(null);
+  const [reviews, setReviews] = useState<Review[]>([]);
+  const [summary, setSummary] = useState<VendorReviewSummary>({
+    label: 'Loading...',
+    score: 0,
+    total: 0,
+    source: 'ResellPur',
+  });
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    async function fetchReviews() {
+      try {
+        setLoading(true);
+        setError(null);
+
+        const response = await fetch(`/api/reviews/seller/${sellerId}`);
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch reviews');
+        }
+
+        const data = await response.json();
+
+        if (data.success) {
+          setReviews(data.data.reviews);
+          setSummary(data.data.summary);
+        } else {
+          throw new Error(data.error || 'Failed to fetch reviews');
+        }
+      } catch (err) {
+        console.error('Error fetching reviews:', err);
+        setError(err instanceof Error ? err.message : 'Failed to load reviews');
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchReviews();
+  }, [sellerId]);
 
   const scrollBy = (dir: -1 | 1) => {
     const el = scrollerRef.current;
@@ -38,6 +79,45 @@ export default function VendorReviews(): ReactElement {
     const amount = Math.round(el.clientWidth * 0.9) * dir;
     el.scrollBy({ left: amount, behavior: "smooth" });
   };
+
+  if (loading) {
+    return (
+      <section className="py-10">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-center text-2xl md:text-3xl font-bold text-gray-900">
+            Rate of the vendor
+          </h2>
+          <div className="mt-6 text-center text-gray-500">Loading reviews...</div>
+        </div>
+      </section>
+    );
+  }
+
+  if (error) {
+    return (
+      <section className="py-10">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-center text-2xl md:text-3xl font-bold text-gray-900">
+            Rate of the vendor
+          </h2>
+          <div className="mt-6 text-center text-red-500">{error}</div>
+        </div>
+      </section>
+    );
+  }
+
+  if (reviews.length === 0) {
+    return (
+      <section className="py-10">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-center text-2xl md:text-3xl font-bold text-gray-900">
+            Rate of the vendor
+          </h2>
+          <div className="mt-6 text-center text-gray-500">No reviews yet</div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="py-10">

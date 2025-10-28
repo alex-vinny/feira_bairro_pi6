@@ -54,7 +54,7 @@ export default async function ProductOverviewPage({
 
       <div className="border-t" />
       {/* Vendor rating & reviews */}
-      <VendorReviews />
+      <VendorReviews sellerId={product.seller?.id} />
     </div>
   );
 }
