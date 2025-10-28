@@ -1,6 +1,7 @@
 -- ============================================
--- ResellPur Database Schema
+-- Feira do Bairro Database Schema
 -- PostgreSQL Database Structure
+-- Univesp PI6 - Campo Limpo Paulista
 -- ============================================
 
 -- Drop existing tables (in reverse order of dependencies)
