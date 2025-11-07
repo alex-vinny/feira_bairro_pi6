@@ -41,7 +41,7 @@ export default function CategoriesContent({
           {filteredCategories.length === 0 ? (
             <div className="text-center py-12">
               <p className="text-gray-500 text-lg">
-                Nenhuma categoria encontrada para "{searchTerm}"
+                Nenhuma categoria encontrada para &quot;{searchTerm}&quot;
               </p>
             </div>
           ) : (
