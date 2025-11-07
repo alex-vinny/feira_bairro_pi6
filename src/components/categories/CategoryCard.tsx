@@ -33,9 +33,12 @@ export default function CategoryCard({
             Popular
           </div>
         )}
-        {category.count && (
+        {category.count !== undefined && (
           <div className="absolute top-2 right-2 bg-gray-800 text-white text-xs px-2 py-1 rounded-full">
-            {category.count} itens
+            {typeof category.count === 'number'
+              ? `${category.count} ${category.count === 1 ? 'item' : 'itens'}`
+              : category.count
+            }
           </div>
         )}
       </div>
@@ -45,10 +48,10 @@ export default function CategoryCard({
         </h3>
         <p className="text-gray-600 text-sm mb-4">{category.description}</p>
         <Link
-          href="/product-overview/demo-item"
+          href={`/categories/${category.id}`}
           className="mt-auto w-full bg-orange-500 hover:bg-orange-600 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 flex items-center justify-center"
         >
-          Compre agora
+          Ver produtos
           <span className="ml-2">→</span>
         </Link>
       </div>

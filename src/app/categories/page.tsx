@@ -1,9 +1,12 @@
 import Footer from "@/components/Footer";
 import SearchSection from "@/components/categories/SearchSection";
 import CategoriesContent from "@/components/categories/CategoriesContent";
-import { categories } from "@/data/categories";
+import { getAllCategories } from "@/services/categoryService";
 
-export default function CategoriesPage() {
+export default async function CategoriesPage() {
+  // Fetch categories from database
+  const categories = await getAllCategories();
+
   return (
     <div className="min-h-screen bg-gray-50">
       <SearchSection />
