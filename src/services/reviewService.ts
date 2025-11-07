@@ -157,36 +157,36 @@ function formatTimeAgo(date: Date): string {
   const diffYear = Math.floor(diffDay / 365);
 
   if (diffYear > 0) {
-    return diffYear === 1 ? '1 year ago' : `${diffYear} years ago`;
+    return diffYear === 1 ? 'há 1 ano' : `há ${diffYear} anos`;
   }
   if (diffMonth > 0) {
-    return diffMonth === 1 ? '1 month ago' : `${diffMonth} months ago`;
+    return diffMonth === 1 ? 'há 1 mês' : `há ${diffMonth} meses`;
   }
   if (diffWeek > 0) {
-    return diffWeek === 1 ? '1 week ago' : `${diffWeek} weeks ago`;
+    return diffWeek === 1 ? 'há 1 semana' : `há ${diffWeek} semanas`;
   }
   if (diffDay > 0) {
-    return diffDay === 1 ? '1 day ago' : `${diffDay} days ago`;
+    return diffDay === 1 ? 'há 1 dia' : `há ${diffDay} dias`;
   }
   if (diffHour > 0) {
-    return diffHour === 1 ? '1 hour ago' : `${diffHour} hours ago`;
+    return diffHour === 1 ? 'há 1 hora' : `há ${diffHour} horas`;
   }
   if (diffMin > 0) {
-    return diffMin === 1 ? '1 minute ago' : `${diffMin} minutes ago`;
+    return diffMin === 1 ? 'há 1 minuto' : `há ${diffMin} minutos`;
   }
-  return 'just now';
+  return 'agora mesmo';
 }
 
 /**
  * Get rating label based on average rating
  */
 function getRatingLabel(avgRating: number): string {
-  if (avgRating >= 4.8) return 'Excellent';
-  if (avgRating >= 4.5) return 'Very Good';
-  if (avgRating >= 4.0) return 'Good';
-  if (avgRating >= 3.5) return 'Above Average';
-  if (avgRating >= 3.0) return 'Average';
-  if (avgRating >= 2.0) return 'Below Average';
-  return 'Poor';
+  if (avgRating >= 4.8) return 'Excelente';
+  if (avgRating >= 4.5) return 'Muito Bom';
+  if (avgRating >= 4.0) return 'Bom';
+  if (avgRating >= 3.5) return 'Acima da Média';
+  if (avgRating >= 3.0) return 'Médio';
+  if (avgRating >= 2.0) return 'Abaixo da Média';
+  return 'Ruim';
 }
 

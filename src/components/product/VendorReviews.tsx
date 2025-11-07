@@ -98,7 +98,7 @@ export default function VendorReviews({ sellerId = 'u-001' }: VendorReviewsProps
       <section className="py-10">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-center text-2xl md:text-3xl font-bold text-gray-900">
-            Rate of the vendor
+            Avaliações do vendedor
           </h2>
           <div className="mt-6 text-center text-red-500">{error}</div>
         </div>
@@ -111,9 +111,9 @@ export default function VendorReviews({ sellerId = 'u-001' }: VendorReviewsProps
       <section className="py-10">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-center text-2xl md:text-3xl font-bold text-gray-900">
-            Rate of the vendor
+            Avaliações do vendedor
           </h2>
-          <div className="mt-6 text-center text-gray-500">No reviews yet</div>
+          <div className="mt-6 text-center text-gray-500">Nenhuma avaliação ainda</div>
         </div>
       </section>
     );
@@ -123,7 +123,7 @@ export default function VendorReviews({ sellerId = 'u-001' }: VendorReviewsProps
     <section className="py-10">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <h2 className="text-center text-2xl md:text-3xl font-bold text-gray-900">
-          Rate of the vendor
+          Avaliações do vendedor
         </h2>
 
         {/* Summary */}
@@ -139,7 +139,7 @@ export default function VendorReviews({ sellerId = 'u-001' }: VendorReviewsProps
           </div>
           <div className="mt-3 text-xs text-gray-600 flex items-center justify-center gap-2">
             <GoogleWord />
-            <span>Based on {summary.total} reviews</span>
+            <span>Baseado em {summary.total} {summary.total === 1 ? 'avaliação' : 'avaliações'}</span>
           </div>
         </div>
 

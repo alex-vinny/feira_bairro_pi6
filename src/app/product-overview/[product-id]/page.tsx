@@ -1,14 +1,17 @@
 import type { ReactElement } from "react";
+import { notFound } from "next/navigation";
 import OthersLookingSection from "@/components/askout/OthersLookingSection";
 import ProductGalleryAndChat from "@/components/product/ProductGalleryAndChat";
 import VendorReviews from "@/components/product/VendorReviews";
 import ProductHeader from "@/components/product/ProductHeader";
 import ProductDetails from "@/components/product/ProductDetails";
-import { productOverviewDemo } from "@/data/productOverview";
+import { getProductById } from "@/services/productService";
+
+// Force dynamic rendering - don't try to build this page at build time
+export const dynamic = 'force-dynamic';
 
 // Dynamic route: /product-overview/[product-id]
-// This page intentionally ignores the "id" param and renders a fixed demo item
-// so any value (number or text) will show the same content.
+// Fetches product data from the database
 
 export default async function ProductOverviewPage({
   params,
@@ -16,21 +19,43 @@ export default async function ProductOverviewPage({
   params: Promise<{ [key: string]: string } & { "product-id"?: string }>;
 }): Promise<ReactElement> {
   const p = await params;
-  const routeId = p["product-id"] ?? productOverviewDemo.product.id;
-  const { product, sellingPoints, conditionNotes } = productOverviewDemo;
+  const productId = p["product-id"];
+
+  if (!productId) {
+    notFound();
+  }
+
+  // Fetch product from database
+  const product = await getProductById(productId);
+
+  if (!product) {
+    notFound();
+  }
+
+  // Generate selling points from product data
+  const sellingPoints = [
+    product.condition && `Condição: ${product.condition}`,
+    product.negotiable && 'Preço negociável',
+  ].filter(Boolean) as string[];
+
+  // Condition notes (can be enhanced later)
+  const conditionNotes = product.description || '';
+
+  // Location text
+  const locationText = `${product.location.city}, ${product.location.state}`;
 
   return (
     <div className="min-h-screen bg-white">
       <ProductHeader
         product={{ id: product.id, title: product.title }}
-        overrideId={routeId}
+        overrideId={productId}
       />
 
       <section className="py-10">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-2 gap-10">
           {/* Gallery + Carousel + Chat */}
           <ProductGalleryAndChat
-            images={product.images}
+            images={product.images.map(img => img.url)}
             vendorName={product.seller?.displayName}
           />
 
@@ -41,7 +66,7 @@ export default async function ProductOverviewPage({
               seller: product.seller,
               sellingPoints,
               conditionNotes,
-              locationText: product.locationText,
+              locationText,
             }}
           />
         </div>
@@ -49,7 +74,7 @@ export default async function ProductOverviewPage({
 
       {/* You may also like */}
       <section className="py-4 border-t">
-        <OthersLookingSection title="You may also like" />
+        <OthersLookingSection title="Você também pode gostar" />
       </section>
 
       <div className="border-t" />

@@ -2,6 +2,9 @@ import Footer from "@/components/Footer";
 import type { ReactElement } from "react";
 import { query } from "@/lib/db";
 
+// Force dynamic rendering - don't try to build this page at build time
+export const dynamic = 'force-dynamic';
+
 interface AskRequest {
   id: string;
   productName: string;

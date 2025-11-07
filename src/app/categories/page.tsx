@@ -1,7 +1,9 @@
 import Footer from "@/components/Footer";
-import SearchSection from "@/components/categories/SearchSection";
 import CategoriesContent from "@/components/categories/CategoriesContent";
 import { getAllCategories } from "@/services/categoryService";
+
+// Force dynamic rendering - don't try to build this page at build time
+export const dynamic = 'force-dynamic';
 
 export default async function CategoriesPage() {
   // Fetch categories from database
@@ -9,7 +11,6 @@ export default async function CategoriesPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <SearchSection />
       <CategoriesContent categories={categories} />
       <Footer />
     </div>

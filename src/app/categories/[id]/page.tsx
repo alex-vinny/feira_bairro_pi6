@@ -5,6 +5,9 @@ import { getCategoryById } from '@/services/categoryService';
 import { getProductsByCategory } from '@/services/productService';
 import Footer from '@/components/Footer';
 
+// Force dynamic rendering - don't try to build this page at build time
+export const dynamic = 'force-dynamic';
+
 interface CategoryProductsPageProps {
   params: Promise<{ id: string }>;
 }
