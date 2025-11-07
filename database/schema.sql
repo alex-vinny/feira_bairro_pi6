@@ -19,8 +19,9 @@ DROP TABLE IF EXISTS users CASCADE;
 CREATE TABLE users (
     id VARCHAR(50) PRIMARY KEY,
     display_name VARCHAR(100) NOT NULL,
-    email VARCHAR(255) UNIQUE,
+    email VARCHAR(255) UNIQUE NOT NULL,
     phone VARCHAR(20),
+    password TEXT NOT NULL,
 
     -- User type: buyer, seller, or both
     user_type VARCHAR(20) DEFAULT 'buyer' CHECK (user_type IN ('buyer', 'seller', 'both')),

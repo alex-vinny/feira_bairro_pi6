@@ -3,6 +3,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { getCategoryById, updateCategory, deleteCategory } from '@/services/categoryService';
+import { requireAuth } from '@/lib/auth';
 
 export async function GET(
   request: NextRequest,
@@ -56,9 +57,12 @@ export async function PATCH(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    // Require authentication (admin only - for now just require auth)
+    await requireAuth(request);
+
     const { id } = await params;
     const categoryId = parseInt(id);
-    
+
     if (isNaN(categoryId)) {
       return NextResponse.json(
         {
@@ -68,16 +72,22 @@ export async function PATCH(
         { status: 400 }
       );
     }
-    
+
     const body = await request.json();
     await updateCategory(categoryId, body);
-    
+
     return NextResponse.json({
       success: true,
       message: 'Category updated',
     });
-    
+
   } catch (error) {
+    if (error instanceof Error && error.message === 'Authentication required') {
+      return NextResponse.json(
+        { success: false, error: 'Authentication required' },
+        { status: 401 }
+      );
+    }
     console.error('Error updating category:', error);
     return NextResponse.json(
       {
@@ -94,9 +104,12 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    // Require authentication (admin only - for now just require auth)
+    await requireAuth(request);
+
     const { id } = await params;
     const categoryId = parseInt(id);
-    
+
     if (isNaN(categoryId)) {
       return NextResponse.json(
         {
@@ -106,15 +119,21 @@ export async function DELETE(
         { status: 400 }
       );
     }
-    
+
     await deleteCategory(categoryId);
-    
+
     return NextResponse.json({
       success: true,
       message: 'Category deleted',
     });
-    
+
   } catch (error) {
+    if (error instanceof Error && error.message === 'Authentication required') {
+      return NextResponse.json(
+        { success: false, error: 'Authentication required' },
+        { status: 401 }
+      );
+    }
     console.error('Error deleting category:', error);
     return NextResponse.json(
       {

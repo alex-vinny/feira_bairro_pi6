@@ -2,14 +2,15 @@
 // Get ask/donation requests
 
 import { NextRequest, NextResponse } from 'next/server';
-import { 
-  getAllAskRequests, 
+import {
+  getAllAskRequests,
   getActiveAskRequests,
   getRecentAskRequests,
   getDonationRequests,
   getPurchaseRequests,
   createAskRequest
 } from '@/services/askRequestService';
+import { requireAuth } from '@/lib/auth';
 
 export async function GET(request: NextRequest) {
   try {
@@ -60,8 +61,11 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
+    // Require authentication
+    const user = await requireAuth(request);
+
     const body = await request.json();
-    
+
     // Validate required fields
     if (!body.id || !body.productName) {
       return NextResponse.json(
@@ -72,23 +76,30 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       );
     }
-    
+
+    // Use authenticated user's info
     const askRequest = await createAskRequest({
       id: body.id,
       productName: body.productName,
       budget: body.budget,
       isDonation: body.isDonation || false,
-      requesterName: body.requesterName,
-      requesterEmail: body.requesterEmail,
+      requesterName: user.displayName,
+      requesterEmail: user.email,
       requesterPhone: body.requesterPhone,
     });
-    
+
     return NextResponse.json({
       success: true,
       data: askRequest,
     }, { status: 201 });
-    
+
   } catch (error) {
+    if (error instanceof Error && error.message === 'Authentication required') {
+      return NextResponse.json(
+        { success: false, error: 'Authentication required' },
+        { status: 401 }
+      );
+    }
     console.error('Error creating ask request:', error);
     return NextResponse.json(
       {

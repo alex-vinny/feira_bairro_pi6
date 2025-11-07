@@ -3,6 +3,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { getProductById, updateProductStatus, deleteProduct } from '@/services/productService';
+import { requireAuth, isSeller, isOwner } from '@/lib/auth';
 
 // GET /api/products/p-iph-13-128-azul
 export async function GET(
@@ -47,7 +48,35 @@ export async function PATCH(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    // Require authentication
+    const user = await requireAuth(request);
+
+    // Only sellers can update products
+    if (!isSeller(user)) {
+      return NextResponse.json(
+        { success: false, error: 'Only sellers can update products' },
+        { status: 403 }
+      );
+    }
+
     const { id } = await params;
+
+    // Check if product exists and user owns it
+    const product = await getProductById(id);
+    if (!product) {
+      return NextResponse.json(
+        { success: false, error: 'Product not found' },
+        { status: 404 }
+      );
+    }
+
+    if (!product.seller || !isOwner(user, product.seller.id)) {
+      return NextResponse.json(
+        { success: false, error: 'You can only update your own products' },
+        { status: 403 }
+      );
+    }
+
     const body = await request.json();
     const { status } = body;
 
@@ -62,13 +91,19 @@ export async function PATCH(
     }
 
     await updateProductStatus(id, status);
-    
+
     return NextResponse.json({
       success: true,
       message: 'Product status updated',
     });
-    
+
   } catch (error) {
+    if (error instanceof Error && error.message === 'Authentication required') {
+      return NextResponse.json(
+        { success: false, error: 'Authentication required' },
+        { status: 401 }
+      );
+    }
     console.error('Error updating product:', error);
     return NextResponse.json(
       {
@@ -86,15 +121,49 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    // Require authentication
+    const user = await requireAuth(request);
+
+    // Only sellers can delete products
+    if (!isSeller(user)) {
+      return NextResponse.json(
+        { success: false, error: 'Only sellers can delete products' },
+        { status: 403 }
+      );
+    }
+
     const { id } = await params;
+
+    // Check if product exists and user owns it
+    const product = await getProductById(id);
+    if (!product) {
+      return NextResponse.json(
+        { success: false, error: 'Product not found' },
+        { status: 404 }
+      );
+    }
+
+    if (!product.seller || !isOwner(user, product.seller.id)) {
+      return NextResponse.json(
+        { success: false, error: 'You can only delete your own products' },
+        { status: 403 }
+      );
+    }
+
     await deleteProduct(id);
-    
+
     return NextResponse.json({
       success: true,
       message: 'Product deleted',
     });
-    
+
   } catch (error) {
+    if (error instanceof Error && error.message === 'Authentication required') {
+      return NextResponse.json(
+        { success: false, error: 'Authentication required' },
+        { status: 401 }
+      );
+    }
     console.error('Error deleting product:', error);
     return NextResponse.json(
       {

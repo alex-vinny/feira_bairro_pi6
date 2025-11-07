@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export default function CategoriesSection() {
   const categories = [
     { name: "Eletrônicos", icon: "📱", count: "500+" },
@@ -19,16 +21,17 @@ export default function CategoriesSection() {
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {categories.map((category) => (
-            <div
+            <Link
               key={category.name}
-              className="bg-gray-50 rounded-xl p-6 text-center hover:shadow-lg transition-shadow cursor-pointer"
+              href="/categories"
+              className="bg-gray-50 rounded-xl p-6 text-center hover:shadow-lg transition-shadow cursor-pointer block"
             >
               <div className="text-4xl mb-4">{category.icon}</div>
               <h3 className="text-xl font-semibold text-gray-900 mb-2">
                 {category.name}
               </h3>
               <p className="text-gray-600">{category.count} itens</p>
-            </div>
+            </Link>
           ))}
         </div>
       </div>

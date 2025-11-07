@@ -1,17 +1,89 @@
-import { Camera, Upload } from "lucide-react";
+"use client";
+
+import { Camera, Upload, X } from "lucide-react";
 import Image from "next/image";
+import { useState } from "react";
+
+interface ImageData {
+  url: string;
+  alt: string;
+}
 
 interface ImageUploadSectionProps {
-  images: File[];
-  handleImageUpload: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  removeImage: (index: number) => void;
+  images: ImageData[];
+  setImages: (images: ImageData[]) => void;
 }
 
 export default function ImageUploadSection({
   images,
-  handleImageUpload,
-  removeImage,
+  setImages,
 }: ImageUploadSectionProps) {
+  const [uploading, setUploading] = useState(false);
+
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+
+    // Check total images limit
+    if (images.length + files.length > 8) {
+      alert("Você pode adicionar no máximo 8 fotos.");
+      return;
+    }
+
+    setUploading(true);
+
+    try {
+      const uploadPromises = Array.from(files).map(async (file) => {
+        // Convert file to base64
+        const base64 = await fileToBase64(file);
+
+        // Upload to ImgBB via our API route
+        const formData = new FormData();
+        formData.append("image", base64.split(",")[1]); // Remove data:image/...;base64, prefix
+
+        const response = await fetch("/api/upload-image", {
+          method: "POST",
+          body: formData,
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          return {
+            url: data.url,
+            alt: file.name.replace(/\.[^/.]+$/, ""), // Remove extension
+          };
+        } else {
+          throw new Error(data.error || "Upload failed");
+        }
+      });
+
+      const uploadedImages = await Promise.all(uploadPromises);
+      setImages([...images, ...uploadedImages]);
+
+      // Reset input
+      e.target.value = "";
+    } catch (error) {
+      console.error("Error uploading images:", error);
+      alert("Erro ao fazer upload das imagens. Tente novamente.");
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const fileToBase64 = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = (error) => reject(error);
+    });
+  };
+
+  const removeImage = (index: number) => {
+    setImages(images.filter((_, i) => i !== index));
+  };
+
   return (
     <div>
       <h2 className="text-2xl font-semibold text-gray-900 mb-6 flex items-center">
@@ -19,58 +91,87 @@ export default function ImageUploadSection({
         Fotos do Item
       </h2>
 
-      <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
-        <Upload className="mx-auto h-12 w-12 text-gray-400 mb-4" />
-        <p className="text-lg font-medium text-gray-900 mb-2">
-          Adicione fotos do seu item
-        </p>
-        <p className="text-gray-600 mb-4">
-          Máximo 8 fotos. Primeira foto será a capa do anúncio.
-        </p>
-        <input
-          type="file"
-          multiple
-          accept="image/*"
-          onChange={handleImageUpload}
-          className="hidden"
-          id="image-upload"
-        />
-        <label
-          htmlFor="image-upload"
-          className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 cursor-pointer inline-block"
-        >
-          Escolher Fotos
+      {/* Upload Section */}
+      <div className="mb-6">
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          Adicionar Fotos *
         </label>
+        <div className="flex items-center gap-4">
+          <label className="flex-1 cursor-pointer">
+            <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-blue-500 transition-colors">
+              <Upload className="mx-auto h-12 w-12 text-gray-400 mb-3" />
+              <p className="text-sm text-gray-600 font-medium">
+                {uploading
+                  ? "Fazendo upload..."
+                  : "Clique para selecionar fotos"}
+              </p>
+              <p className="text-xs text-gray-500 mt-1">
+                PNG, JPG, WEBP (máx. 8 fotos)
+              </p>
+            </div>
+            <input
+              type="file"
+              accept="image/*"
+              multiple
+              onChange={handleFileUpload}
+              disabled={uploading || images.length >= 8}
+              className="hidden"
+            />
+          </label>
+        </div>
       </div>
 
-      {images.length > 0 && (
-        <div className="mt-6 grid grid-cols-2 md:grid-cols-4 gap-4">
-          {images.map((image, index) => (
-            <div key={index} className="relative h-32">
-              <Image
-                src={URL.createObjectURL(image)}
-                alt={`Preview ${index + 1}`}
-                fill
-                unoptimized
-                className="object-cover rounded-lg"
-                sizes="(max-width: 768px) 50vw, 25vw"
-              />
-              <button
-                type="button"
-                onClick={() => removeImage(index)}
-                className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm hover:bg-red-600"
-              >
-                ×
-              </button>
-              {index === 0 && (
-                <div className="absolute bottom-2 left-2 bg-blue-600 text-white text-xs px-2 py-1 rounded">
-                  Capa
-                </div>
-              )}
-            </div>
-          ))}
-        </div>
-      )}
+      {/* Selected Images */}
+      <div>
+        <p className="text-sm font-medium text-gray-700 mb-3">
+          Fotos selecionadas ({images.length}/8)
+          {images.length > 0 && (
+            <span className="text-xs text-gray-500 ml-2">
+              (A primeira foto será a capa)
+            </span>
+          )}
+        </p>
+
+        {images.length === 0 ? (
+          <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
+            <Camera className="mx-auto h-12 w-12 text-gray-400 mb-3" />
+            <p className="text-gray-600">Nenhuma foto adicionada ainda</p>
+            <p className="text-sm text-gray-500 mt-1">
+              Mínimo 1 foto, máximo 8 fotos
+            </p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {images.map((image, index) => (
+              <div key={index} className="relative aspect-square group">
+                <Image
+                  src={image.url}
+                  alt={image.alt}
+                  fill
+                  className="object-cover rounded-lg"
+                />
+                {index === 0 && (
+                  <div className="absolute top-2 left-2 bg-blue-600 text-white text-xs px-2 py-1 rounded">
+                    Capa
+                  </div>
+                )}
+                <button
+                  type="button"
+                  onClick={() => removeImage(index)}
+                  className="absolute top-2 right-2 bg-red-600 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      <p className="text-sm text-gray-600 mt-4">
+        💡 Dica: Use fotos com boa iluminação e mostre diferentes ângulos do
+        produto.
+      </p>
     </div>
   );
 }

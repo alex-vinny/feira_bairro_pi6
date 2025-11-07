@@ -1,18 +1,18 @@
 import type { Condition, Benefit, Tip } from "@/types/sell";
 
 export const sellCategories = [
-  "Eletrônicos",
-  "Casa, Decoração e Utensílios",
-  "Artigos Infantis",
-  "Escritório",
-  "Animais de Estimação",
-  "Roupas",
-  "Calçados",
-  "Relógios",
-  "Livros",
-  "Esportes",
-  "Instrumentos Musicais",
-  "Outros",
+  { id: 1, name: "Eletrônicos" },
+  { id: 2, name: "Casa, Decoração e Utensílios" },
+  { id: 3, name: "Artigos Infantis" },
+  { id: 4, name: "Escritório" },
+  { id: 5, name: "Animais de Estimação" },
+  { id: 6, name: "Roupas" },
+  { id: 7, name: "Calçados" },
+  { id: 8, name: "Relógios" },
+  { id: 9, name: "Livros" },
+  { id: 10, name: "Esportes" },
+  { id: 11, name: "Instrumentos Musicais" },
+  { id: 12, name: "Outros" },
 ];
 
 export const conditions: Condition[] = [

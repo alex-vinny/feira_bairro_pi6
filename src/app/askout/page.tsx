@@ -1,4 +1,3 @@
-import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import AskForm from "@/components/askout/AskForm";
 import OthersLookingSection from "@/components/askout/OthersLookingSection";
@@ -7,7 +6,6 @@ import type { ReactElement } from "react";
 export default function AskOutPage(): ReactElement {
   return (
     <div className="min-h-screen bg-white">
-      <Header />
 
       <section className="bg-gradient-to-br from-blue-50 to-indigo-100 py-14">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">

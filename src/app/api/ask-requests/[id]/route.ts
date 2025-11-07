@@ -2,11 +2,12 @@
 // Get, update, or delete a single ask request
 
 import { NextRequest, NextResponse } from 'next/server';
-import { 
-  getAskRequestById, 
-  updateAskRequestStatus, 
-  deleteAskRequest 
+import {
+  getAskRequestById,
+  updateAskRequestStatus,
+  deleteAskRequest
 } from '@/services/askRequestService';
+import { requireAuth } from '@/lib/auth';
 
 export async function GET(
   request: NextRequest,
@@ -48,6 +49,9 @@ export async function PATCH(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    // Require authentication (only authenticated users can update)
+    await requireAuth(request);
+
     const { id } = await params;
     const body = await request.json();
     const { status } = body;
@@ -63,13 +67,19 @@ export async function PATCH(
     }
 
     await updateAskRequestStatus(id, status);
-    
+
     return NextResponse.json({
       success: true,
       message: 'Ask request status updated',
     });
-    
+
   } catch (error) {
+    if (error instanceof Error && error.message === 'Authentication required') {
+      return NextResponse.json(
+        { success: false, error: 'Authentication required' },
+        { status: 401 }
+      );
+    }
     console.error('Error updating ask request:', error);
     return NextResponse.json(
       {
@@ -86,15 +96,24 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    // Require authentication (only authenticated users can delete)
+    await requireAuth(request);
+
     const { id } = await params;
     await deleteAskRequest(id);
-    
+
     return NextResponse.json({
       success: true,
       message: 'Ask request deleted',
     });
-    
+
   } catch (error) {
+    if (error instanceof Error && error.message === 'Authentication required') {
+      return NextResponse.json(
+        { success: false, error: 'Authentication required' },
+        { status: 401 }
+      );
+    }
     console.error('Error deleting ask request:', error);
     return NextResponse.json(
       {

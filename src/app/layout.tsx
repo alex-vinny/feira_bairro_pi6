@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { AuthProvider } from "@/contexts/AuthContext";
+import UserHeader from "@/components/UserHeader";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -13,9 +15,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "ResellPur - Marketplace de Eletrônicos Premium",
+  title: "Feira do Bairro - Marketplace Comunitário",
   description:
-    "O marketplace confiável para eletrônicos seminovos de alta qualidade. Compre e venda iPhones, iPads, MacBooks e muito mais.",
+    "Marketplace comunitário para compra e venda de produtos usados. Projeto Integrador Univesp 6 - Campo Limpo Paulista.",
 };
 
 export default function RootLayout({
@@ -28,7 +30,10 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
+        <AuthProvider>
+          <UserHeader />
+          {children}
+        </AuthProvider>
       </body>
     </html>
   );

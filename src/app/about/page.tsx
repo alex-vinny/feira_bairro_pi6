@@ -1,15 +1,11 @@
-import HeroSection from "@/components/HeroSection";
-import CategoriesSection from "@/components/CategoriesSection";
 import FeaturesSection from "@/components/FeaturesSection";
 import CTASection from "@/components/CTASection";
 import EnvironmentalSection from "@/components/EnvironmentalSection";
 import Footer from "@/components/Footer";
 
-export default function Home() {
+export default function AboutPage() {
   return (
     <div className="min-h-screen bg-white">
-      <HeroSection />
-      <CategoriesSection />
       <FeaturesSection />
       <CTASection />
       <EnvironmentalSection />
@@ -17,3 +13,4 @@ export default function Home() {
     </div>
   );
 }
+

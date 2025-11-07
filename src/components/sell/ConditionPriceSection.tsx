@@ -4,12 +4,20 @@ import type { Condition, ConditionValue } from "@/types/sell";
 interface ConditionPriceSectionProps {
   condition: ConditionValue | "";
   setCondition: (condition: ConditionValue | "") => void;
+  price: string;
+  setPrice: (price: string) => void;
+  negotiable: boolean;
+  setNegotiable: (negotiable: boolean) => void;
   conditions: Condition[];
 }
 
 export default function ConditionPriceSection({
   condition,
   setCondition,
+  price,
+  setPrice,
+  negotiable,
+  setNegotiable,
   conditions,
 }: ConditionPriceSectionProps) {
   return (
@@ -60,6 +68,8 @@ export default function ConditionPriceSection({
               <DollarSign className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
               <input
                 type="number"
+                value={price}
+                onChange={(e) => setPrice(e.target.value)}
                 placeholder="0,00"
                 min="0"
                 step="0.01"
@@ -73,7 +83,11 @@ export default function ConditionPriceSection({
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Aceita Negociação?
             </label>
-            <select className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+            <select
+              value={negotiable ? "sim" : "nao"}
+              onChange={(e) => setNegotiable(e.target.value === "sim")}
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            >
               <option value="sim">Sim, aceito propostas</option>
               <option value="nao">Não, preço fixo</option>
             </select>

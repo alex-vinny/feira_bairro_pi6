@@ -13,7 +13,8 @@ const pool = new Pool({
   password: process.env.DB_PASSWORD || '',
   max: 20, // maximum number of connections in the pool
   idleTimeoutMillis: 30000, // close idle connections after 30 seconds
-  connectionTimeoutMillis: 2000, // return error after 2 seconds if no connection available
+  connectionTimeoutMillis: 10000, // return error after 10 seconds if no connection available
+  ssl: process.env.DB_SSL === 'true' ? { rejectUnauthorized: false } : false, // SSL support for remote databases
 });
 
 // Simple query function
@@ -23,13 +24,28 @@ export async function query<T extends QueryResultRow = QueryResultRow>(
   params?: unknown[]
 ): Promise<QueryResult<T>> {
   const start = Date.now();
+
+  console.log('🔵 [DB QUERY] Starting query...');
+  console.log('📝 SQL:', text);
+  console.log('📊 Params:', params);
+
   try {
     const result = await pool.query<T>(text, params);
     const duration = Date.now() - start;
-    console.log('Executed query', { text, duration, rows: result.rowCount });
+
+    console.log('✅ [DB QUERY] Success!');
+    console.log('⏱️  Duration:', duration + 'ms');
+    console.log('📈 Rows returned:', result.rowCount);
+    console.log('📦 Data:', JSON.stringify(result.rows, null, 2));
+    console.log('---');
+
     return result;
   } catch (error) {
-    console.error('Database query error:', error);
+    console.error('❌ [DB QUERY] Error!');
+    console.error('💥 Error details:', error);
+    console.error('📝 Failed SQL:', text);
+    console.error('📊 Failed Params:', params);
+    console.error('---');
     throw error;
   }
 }
